@@ -11,14 +11,14 @@ use Symfony\Component\Routing\Annotation\Route;
 Class UserController extends AbstractController
 {
     /**
-     * @Route("/users")
+     * @Route("/users", name="list_users")
      */
     public function index()
     {
         $users = $this->getDoctrine()
             ->getRepository(User::class)
             ->findAll();
-        return $this->render('users/login.html.twig', array('users' => $users));
+        return $this->render('users/index.html.twig', array('users' => $users));
     }
 
     /**
