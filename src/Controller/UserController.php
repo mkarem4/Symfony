@@ -5,7 +5,7 @@ namespace App\Controller;
 use Sensio\Bandle\FramewordExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-Class ArticleController extends AbstractController
+Class UserController extends AbstractController
 {
     /*
      * @ROUTE("/home")
