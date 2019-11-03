@@ -1,7 +1,10 @@
-
 <title>{% block title %}Welcome!{% endblock %}</title>
 
 {% block body %}
-    <h1>This is Konafa</h1>
-    <div>this is random number : {{ number }}</div>
+    <ul>
+        {% for user in users %}
+            <li> {{ user.name }}</li>
+        {% endfor %}
+    </ul>
+
 {% endblock %}
