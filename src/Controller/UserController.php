@@ -10,8 +10,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 Class UserController extends AbstractController
 {
+//    public function __construct()
+//    {
+//        $this->denyAccessUnlessGranted('ROLE_USER');
+//    }
+
     /**
-     * @Route("/users", name="list_users")
+     * @Route("/users", name="list_users", condition="")
      */
     public function index()
     {
@@ -24,20 +29,20 @@ Class UserController extends AbstractController
     /**
      * @Route("/save", name="create_user")
      */
-    public function save()
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-
-        $user = new User();
-        $user->setUsername('Mohamed Hassan');
-        $user->setEmail('m.hassan@altairegypt.com');
-        $user->setPassword('secret123');
-
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-        return new Response('Created new user with id: ' . $user->getId());
-    }
+//    public function save()
+//    {
+//        $entityManager = $this->getDoctrine()->getManager();
+//
+//        $user = new User();
+//        $user->setUsername('Mohamed Hassan');
+//        $user->setEmail('m.hassan@altairegypt.com');
+//        $user->setPassword(bcrypt('secret123'));
+//
+//        $entityManager->persist($user);
+//        $entityManager->flush();
+//
+//        return new Response('Created new user with id: ' . $user->getId());
+//    }
 
 
     /**

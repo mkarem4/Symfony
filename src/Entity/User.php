@@ -119,4 +119,22 @@ class User implements UserInterface
     {
         // TODO: Implement eraseCredentials() method.
     }
+
+    public function serialize()
+    {
+        return serialize([
+            $this->id,
+            $this->username,
+            $this->email,
+            $this->password
+        ]);
+    }
+
+    public function unserialize($serialized)
+    {
+        list($this->id,
+            $this->username,
+            $this->email,
+            $this->password) = unserialize($serialized);
+    }
 }
