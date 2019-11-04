@@ -90,11 +90,9 @@ class PostController extends AbstractController
                 $fileName = $fileUploader->upload($file);
                 if($fileName)
                 {
-                    $path =  $this->getParameter('uploads_directory').$post->getFile();
+                    $filePath =  $this->getParameter('uploads_directory');
                     //remove old file if exists
-                    if (file_exists( $path ) && $post->getFile() != NULL) {
-                        unlink ( $path );
-                    }
+                    $post->removeUploadedFile($filePath);
                     $post->setFile($fileName);
                 }
 
@@ -106,14 +104,10 @@ class PostController extends AbstractController
                 $imgName = $imageUploader->upload($img);
                 if($imgName)
                 {
-                    $path =  $this->getParameter('uploads_directory').$post->getFile();
-                    $thumbPath =  $this->getParameter('uploads_directory').$post->getFile();
+                    $path =  $this->getParameter('featured_images_directory');
+                    $thumbPath =  $this->getParameter('featured_images_thumb_directory');
                     //remove old file if exists
-                    if (file_exists( $path ) && $post->getFeaturedImage() != NULL)
-                        unlink ( $path );
-
-                    if (file_exists( $thumbPath ) && $post->getFeaturedImage() != NULL)
-                        unlink ( $thumbPath );
+                    $post->removeUploadedImages($path, $thumbPath);
 
                     $post->setFeaturedImage($imgName);
                 }
