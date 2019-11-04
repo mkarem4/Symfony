@@ -100,4 +100,26 @@ class Post
             'maxMessage' => 'The title cannot be longer than {{ limit }} characters',
         ]));
     }
+
+    public function removeUploadedImages($path, $thumbPath)
+    {
+        $path =  $path.'/'.$this->getFeaturedImage();
+        $thumbPath =  $thumbPath.'/'.$this->getFeaturedImage();
+        //remove old file if exists
+        if (file_exists( $path ) && $this->getFeaturedImage() != NULL)
+            unlink ( $path );
+
+        if (file_exists( $thumbPath ) && $this->getFeaturedImage() != NULL)
+            unlink ( $thumbPath );
+
+    }
+
+    public function removeUploadedFile($path)
+    {
+        $path =  $path.'/'.$this->getFile();
+        //remove old file if exists
+        if (file_exists( $path ) && $this->getFile() != NULL)
+            unlink ( $path ) ;
+
+    }
 }

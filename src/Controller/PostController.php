@@ -137,6 +137,11 @@ class PostController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
+            $path = $this->getParameter('featured_images_directory');
+            $thumbPath = $this->getParameter('featured_images_thumb_directory');
+            $filePath = $this->getParameter('uploads_directory');
+            $post->removeUploadedImages($path, $thumbPath);
+            $post->removeUploadedFile($filePath);
             $entityManager->remove($post);
             $entityManager->flush();
         }
