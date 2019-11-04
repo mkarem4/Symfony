@@ -18,19 +18,25 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=190)
      */
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=190, unique=true)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=190)
      */
     private $password;
+
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $roles = [];
+
 
     /**
      * @return int|null
@@ -92,9 +98,15 @@ class User implements UserInterface
      *
      * @return (Role|string)[] The user roles
      */
-    public function getRoles()
+    public function getRoles(): array
     {
-        return array('ROLE_USER');
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        if (in_array('ROLE_USER', $roles, true) === false) {
+            $roles[] = 'ROLE_USER';
+        }
+
+        return array_unique($roles);
     }
 
     /**
@@ -120,21 +132,9 @@ class User implements UserInterface
         // TODO: Implement eraseCredentials() method.
     }
 
-    public function serialize()
+    public function setRoles(array $roles): self
     {
-        return serialize([
-            $this->id,
-            $this->username,
-            $this->email,
-            $this->password
-        ]);
-    }
-
-    public function unserialize($serialized)
-    {
-        list($this->id,
-            $this->username,
-            $this->email,
-            $this->password) = unserialize($serialized);
+        $this->roles = $roles;
+        return $this;
     }
 }
