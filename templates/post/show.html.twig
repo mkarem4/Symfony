@@ -21,7 +21,11 @@
             </tr>
             <tr>
                 <th>Featured_image</th>
-                <td><img src="{{ asset('/uploads/featured_images/' ~ post.featuredImage) }}"></td>
+                <td>{% if(post.featuredImage) %} <img src="{{ asset('/uploads/featured_images/' ~ post.featuredImage) }}">{% endif %}</td>
+            </tr>
+            <tr>
+                <th>File</th>
+                <td>{% if(post.file) %} <a href="{{ asset('/uploads/' ~ post.file) }}">{{ post.file }}</a>{% endif %} </td>
             </tr>
         </tbody>
     </table>
