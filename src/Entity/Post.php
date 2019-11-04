@@ -31,6 +31,11 @@ class Post
      */
     private $featured_image;
 
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $file;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -68,6 +73,18 @@ class Post
     public function setFeaturedImage(?string $featured_image): self
     {
         $this->featured_image = $featured_image;
+
+        return $this;
+    }
+
+    public function getFile(): ?string
+    {
+        return $this->file;
+    }
+
+    public function setFile(?string $file): self
+    {
+        $this->file = $file;
 
         return $this;
     }

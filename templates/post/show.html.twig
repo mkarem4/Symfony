@@ -21,7 +21,7 @@
             </tr>
             <tr>
                 <th>Featured_image</th>
-                <td>{{ post.featuredImage }}</td>
+                <td><img src="{{ asset('/uploads/featured_images/' ~ post.featuredImage) }}"></td>
             </tr>
         </tbody>
     </table>
