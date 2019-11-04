@@ -77,12 +77,48 @@ class PostController extends AbstractController
     /**
      * @Route("/{id}/edit", name="post_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Post $post): Response
+    public function edit(Request $request, Post $post, FileUploader $fileUploader, ImageUploader $imageUploader): Response
     {
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            /** @var UploadedFile $file */
+            $file = $form['file']->getData();
+            if ($file) {
+                $fileName = $fileUploader->upload($file);
+                if($fileName)
+                {
+                    $path =  $this->getParameter('uploads_directory').$post->getFile();
+                    //remove old file if exists
+                    if (file_exists( $path ) && $post->getFile() != NULL) {
+                        unlink ( $path );
+                    }
+                    $post->setFile($fileName);
+                }
+
+            }
+
+            /** @var UploadedFile $image */
+            $img = $form['featured_image']->getData();
+            if ($img) {
+                $imgName = $imageUploader->upload($img);
+                if($imgName)
+                {
+                    $path =  $this->getParameter('uploads_directory').$post->getFile();
+                    $thumbPath =  $this->getParameter('uploads_directory').$post->getFile();
+                    //remove old file if exists
+                    if (file_exists( $path ) && $post->getFeaturedImage() != NULL)
+                        unlink ( $path );
+
+                    if (file_exists( $thumbPath ) && $post->getFeaturedImage() != NULL)
+                        unlink ( $thumbPath );
+
+                    $post->setFeaturedImage($imgName);
+                }
+            }
+
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('post_index');
