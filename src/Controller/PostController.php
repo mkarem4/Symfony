@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
+use App\Service\ImageUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +30,7 @@ class PostController extends AbstractController
     /**
      * @Route("/new", name="post_new", methods={"GET","POST"})
      */
-    public function new(Request $request, FileUploader $fileUploader): Response
+    public function new(Request $request, FileUploader $fileUploader, ImageUploader $imageUploader): Response
     {
         $post = new Post();
         $form = $this->createForm(PostType::class, $post);
@@ -41,6 +42,13 @@ class PostController extends AbstractController
             if ($file) {
                 $fileName = $fileUploader->upload($file);
                 $post->setFile($fileName);
+            }
+
+            /** @var UploadedFile $image */
+            $img = $form['featured_image']->getData();
+            if ($img) {
+                $fileName = $imageUploader->upload($img);
+                $post->setFeaturedImage($fileName);
             }
 
             $entityManager = $this->getDoctrine()->getManager();

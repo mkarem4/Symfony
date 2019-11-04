@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
@@ -87,5 +89,15 @@ class Post
         $this->file = $file;
 
         return $this;
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('title', new Assert\Length([
+            'min' => 2,
+            'max' => 250,
+            'minMessage' => 'The title must be at least {{ limit }} characters long',
+            'maxMessage' => 'The title cannot be longer than {{ limit }} characters',
+        ]));
     }
 }

@@ -6,6 +6,7 @@
 parameters:
     featured_images_directory: '%kernel.project_dir%/public/uploads/featured_images'
     uploads_directory: '%kernel.project_dir%/public/uploads'
+    featured_images_thumb_directory: '%kernel.project_dir%/public/uploads/featured_images/thumbs'
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -30,3 +31,8 @@ services:
     App\Service\FileUploader:
         arguments:
             $targetDirectory: '%uploads_directory%'
+
+    App\Service\ImageUploader:
+        arguments:
+            $targetDirectory: '%featured_images_directory%'
+            $thumbTargetDirectory: '%featured_images_thumb_directory%'
