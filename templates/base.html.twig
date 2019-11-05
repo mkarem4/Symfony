@@ -3,17 +3,17 @@
 
 <head>
     {% block head %}
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
 
-    <title>Symfony Blog - {% block title %}Home!{% endblock %}</title>
-    <!-- Bootstrap core CSS -->
-    <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+        <title>Symfony Blog - {% block title %}Home!{% endblock %}</title>
+        <!-- Bootstrap core CSS -->
+        <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="{{ asset('css/simple-sidebar.css') }}" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="{{ asset('css/simple-sidebar.css') }}" rel="stylesheet">
     {% endblock %}
 </head>
 
@@ -27,7 +27,7 @@
         <div class="list-group list-group-flush">
             <a href="/" class="list-group-item list-group-item-action bg-light">Dashboard</a>
             {% if app.user %}
-                <a href="{{ path('list_users') }}" class="list-group-item list-group-item-action bg-light">Users</a>
+                <a href="{{ path('user_index') }}" class="list-group-item list-group-item-action bg-light">Users</a>
                 <a href="{{ path('post_index') }}" class="list-group-item list-group-item-action bg-light">Posts</a>
             {% endif %}
         </div>

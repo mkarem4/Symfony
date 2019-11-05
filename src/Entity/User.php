@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -18,19 +20,35 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=190)
      */
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=190, unique=true)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=190)
      */
     private $password;
+
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $roles = [];
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user")
+     */
+    private $comments;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
+
 
     /**
      * @return int|null
@@ -73,7 +91,7 @@ class User implements UserInterface
 
     public function setPassword(string $password): self
     {
-        $this->password = $password;
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
 
         return $this;
     }
@@ -92,9 +110,15 @@ class User implements UserInterface
      *
      * @return (Role|string)[] The user roles
      */
-    public function getRoles()
+    public function getRoles(): array
     {
-        return array('ROLE_USER');
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        if (in_array('ROLE_USER', $roles, true) === false) {
+            $roles[] = 'ROLE_USER';
+        }
+
+        return array_unique($roles);
     }
 
     /**
@@ -120,21 +144,40 @@ class User implements UserInterface
         // TODO: Implement eraseCredentials() method.
     }
 
-    public function serialize()
+    public function setRoles(array $roles): self
     {
-        return serialize([
-            $this->id,
-            $this->username,
-            $this->email,
-            $this->password
-        ]);
+        $this->roles = $roles;
+        return $this;
     }
 
-    public function unserialize($serialized)
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
     {
-        list($this->id,
-            $this->username,
-            $this->email,
-            $this->password) = unserialize($serialized);
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
