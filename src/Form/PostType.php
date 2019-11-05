@@ -59,6 +59,7 @@ class PostType extends AbstractType
                     ])
                 ],
             ])
+            ->add('user')
         ;
     }
 
