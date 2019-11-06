@@ -36,3 +36,6 @@ services:
         arguments:
             $targetDirectory: '%featured_images_directory%'
             $thumbTargetDirectory: '%featured_images_thumb_directory%'
+
+    sensio_framework_extra.view.listener:
+        alias: Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener

@@ -21,3 +21,4 @@ composer.lock
 .idea/*
 .env
 .idea
+/public/uploads/*

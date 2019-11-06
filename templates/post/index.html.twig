@@ -10,6 +10,7 @@
             <tr>
                 <th>Id</th>
                 <th>Title</th>
+                <th>Author</th>
                 <th>Content</th>
                 <th>actions</th>
             </tr>
@@ -19,6 +20,7 @@
             <tr>
                 <td>{{ post.id }}</td>
                 <td>{{ post.title }}</td>
+                <td>{{ post.user.username }}</td>
                 <td>{{ post.content }}</td>
                 <td>
                     <a href="{{ path('post_show', {'id': post.id}) }}">show</a>
