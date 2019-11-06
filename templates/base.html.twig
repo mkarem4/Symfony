@@ -25,10 +25,11 @@
     <div class="bg-light border-right" id="sidebar-wrapper">
         <div class="sidebar-heading">Symfony Blog </div>
         <div class="list-group list-group-flush">
-            <a href="/" class="list-group-item list-group-item-action bg-light">Dashboard</a>
-            {% if app.user %}
+            <a href="/" class="list-group-item list-group-item-action bg-light">Home Page</a>
+            {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('user_index') }}" class="list-group-item list-group-item-action bg-light">Users</a>
                 <a href="{{ path('post_index') }}" class="list-group-item list-group-item-action bg-light">Posts</a>
+                <a href="{{ path('comment_index') }}" class="list-group-item list-group-item-action bg-light">Comments</a>
             {% endif %}
         </div>
     </div>

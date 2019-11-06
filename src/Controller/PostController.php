@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Service\FileUploader;
 
 /**
- * @Route("/post")
+ * @Route("/admin/post")
  */
 class PostController extends AbstractController
 {

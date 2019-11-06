@@ -18,7 +18,7 @@
     </style>
 
     <div class="example-wrapper">
-        <h1>Hello To Our Konafa Website! ✅</h1>
+        <h1>Welcome To Our Konafa Website! ✅</h1>
 
         <p>This is demo for konafa website So Enjoy :)</p> <br>
 
@@ -26,4 +26,21 @@
             To login please click <a href="{{ path('app_login') }}">here</a>
         {% endif %}
     </div>
+
+
+    {% block content %}
+        {% for post in posts %}
+            <a href="{{ path('post_details',{'id': post.id}) }}">
+                <div class="card">
+                    <div>{{ post.title }}</div>
+                    <div>{{ post.content }}</div>
+                    <div>{% if(post.featuredImage) %} <img
+                            src="{{ asset('/uploads/featured_images/thumbs/' ~ post.featuredImage) }}">{% endif %}</div>
+                    <div>{% if(post.file) %} <a
+                            href="{{ asset('/uploads/' ~ post.file) }}">{{ post.file }}</a>{% endif %} </div>
+
+                </div>
+            </a>
+        {% endfor %}
+    {% endblock %}
 {% endblock %}

@@ -4,7 +4,7 @@ doctrine:
         # use postgresql for PostgreSQL
         # use sqlite for SQLite
         driver: pdo_sqlite
-        path: '%kernel.project_dir%/var/sqlite.db'
+        path: '%kernel.project_dir%/var/symfony.db'
 
         # only needed for MySQL
         charset: utf8mb4
