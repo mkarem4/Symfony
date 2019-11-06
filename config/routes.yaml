@@ -8,3 +8,7 @@ index:
 post:
     path: /api/posts/{postId}
     controller: App\Controller\API\PostController::getPost
+
+posts:
+    path: /api/posts
+    controller: App\Controller\API\PostController::getPosts

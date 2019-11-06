@@ -9,7 +9,10 @@ use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
 use FOS\RestBundle\View\View;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use JMS\Serializer\SerializerBuilder;
+
+
+
 /**
  * Post controller.
  * @Route("/api", name="api_")
@@ -21,16 +24,35 @@ class PostController extends FOSRestController
      * Retrieves an post resource
      * @Rest\Get("/posts/{postId}")
      * @param Int $postId
-     * @return JsonResponse
+     * @return Response
      */
-    public function getPost(int $postId): JsonResponse
+    public function getPost(int $postId): Response
     {
         $repository = $this->getDoctrine()->getRepository(Post::class);
         $post = $repository->findById($postId);
-        return new JsonResponse(['post' => $postId]);
-//        $article = $postRepository->findById($postId);
-//        // In case our GET was a success we need to return a 200 HTTP OK response with the request object
-//        return View::create($article, Response::HTTP_OK);
+
+
+        $serializer = SerializerBuilder::create()->build();
+        $jsonObject = $serializer->serialize($post, 'json');
+
+        // For instance, return a Response with encoded Json
+        return new Response($jsonObject, 200, ['Content-Type' => 'application/json']);
+    }
+
+    /**
+     * Retrieves an post resource
+     * @Rest\Get("/posts")
+     * @return Response
+     */
+    public function getPosts(): Response
+    {
+        $repository = $this->getDoctrine()->getRepository(Post::class);
+        $posts = $repository->findAll();
+        $serializer = SerializerBuilder::create()->build();
+        $jsonObject = $serializer->serialize($posts,'json');
+
+        // For instance, return a Response with encoded Json
+        return new Response($jsonObject, 200, ['Content-Type' => 'application/json']);
     }
         /**
      * Creates an Article resource
