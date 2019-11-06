@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
+use FOS\RestBundle\View\View;
+use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * Post controller.
  * @Route("/api", name="api_")
@@ -19,13 +21,16 @@ class PostController extends FOSRestController
      * Retrieves an post resource
      * @Rest\Get("/posts/{postId}")
      * @param Int $postId
-     * @return View
+     * @return JsonResponse
      */
-    public function getPost(int $postId): View
+    public function getPost(int $postId): JsonResponse
     {
-        $article = $this->PostRepository->findById($postId);
-        // In case our GET was a success we need to return a 200 HTTP OK response with the request object
-        return View::create($article, Response::HTTP_OK);
+        $repository = $this->getDoctrine()->getRepository(Post::class);
+        $post = $repository->findById($postId);
+        return new JsonResponse(['post' => $postId]);
+//        $article = $postRepository->findById($postId);
+//        // In case our GET was a success we need to return a 200 HTTP OK response with the request object
+//        return View::create($article, Response::HTTP_OK);
     }
         /**
      * Creates an Article resource
