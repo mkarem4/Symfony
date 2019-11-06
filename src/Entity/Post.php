@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
@@ -13,6 +14,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
  */
 class Post
 {
+    use TimestampableEntity;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -182,5 +184,15 @@ class Post
         $this->user = $user;
 
         return $this;
+    }
+
+    /**
+     * Generates the magic method
+     *
+     */
+    public function __toString()
+    {
+        // to show the name of the Post in the select
+        return $this->title;
     }
 }
