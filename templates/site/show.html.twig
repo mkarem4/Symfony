@@ -44,15 +44,50 @@
             <div class="example-wrapper">{{ post.comments|length }} Comments</div>
         </div>
 
-        Leave Your Comment :
-        <form action="{{ path('save_comment',{'id': post.id}) }}" method="post">
-            <textarea name="content"></textarea>
-            <button type="submit">Save</button>
-        </form>
+        {% if is_granted('ROLE_USER') %}
+            Leave Your Comment :
+            <form action="{{ path('save_comment',{'id': post.id}) }}" method="post">
+                <textarea name="content"></textarea>
+                <button type="submit">Save</button>
+            </form>
+        {% endif %}
 
         <h2>Comments:</h2>
         {% for comment in post.comments %}
-            <span><b>{{ comment.user.username }}</b> : {{ comment.content }} </span><br>
+            <span class="comment{{ comment.id }}"><b>{{ comment.user.username }}</b> : {{ comment.content }}
+                {% if (app.user.username == comment.user.username) or (is_granted('ROLE_ADMIN')) %}
+                    <a href="{{ path('comment_delete_ajax',{'id': comment.id}) }}" id="{{ comment.id }}"
+                       class="deleteBtn btn btn-danger btn-xs">Remove</a>
+                {% endif %}
+            </span>
+
+            <br>
         {% endfor %}
     {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('.deleteBtn').click(function (e) {
+                e.preventDefault();
+                url = $(this).attr('href');
+                var itemClass = url.split('/');
+                itemClass = itemClass[itemClass.length - 1]; // comment id
+                $.ajax({
+                    url: url,
+                    type: 'delete',
+
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            $('.comment' + itemClass).fadeOut(1000).remove();
+                        }
+                    },
+                    error: function (e) {
+                        console.log(e.responseText);
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
