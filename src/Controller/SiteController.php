@@ -64,4 +64,30 @@ class SiteController extends AbstractController
         return $this->render('site/show.html.twig', array('post' => $post, 'comments' => $comments));
     }
 
+
+    /**
+     * @Route("/comment/{id}", name="comment_delete_ajax", methods={"DELETE"})
+     * @param Request $request
+     * @param Comment $comment
+     * @return RedirectResponse|Response
+     */
+    public function ajaxDeleteItemAction(Request $request)
+    {
+
+        if ($request->isXmlHttpRequest()) {
+            $id = $request->get('id');
+            $em = $this->getDoctrine()->getManager();
+            $comment = $em->getRepository(Comment::class)->find($id);
+            $em->remove($comment);
+            $em->flush();
+            $response = array(
+                'status' => 'success'
+            );
+            return $this->json($response);
+        }
+        $response = array(
+            'status' => 'error'
+        );
+        return $this->json($response);
+    }
 }
