@@ -55,7 +55,7 @@
         <h2>Comments:</h2>
         {% for comment in post.comments %}
             <span class="comment{{ comment.id }}"><b>{{ comment.user.username }}</b> : {{ comment.content }}
-                {% if (app.user.username == comment.user.username) or (is_granted('ROLE_ADMIN')) %}
+                {% if (app.user and (app.user.username == comment.user.username)) or (is_granted('ROLE_ADMIN')) %}
                     <a href="{{ path('comment_delete_ajax',{'id': comment.id}) }}" id="{{ comment.id }}"
                        class="deleteBtn btn btn-danger btn-xs">Remove</a>
                 {% endif %}
