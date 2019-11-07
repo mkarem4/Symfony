@@ -60,7 +60,7 @@ class PostController extends FOSRestController
 
         // Paginate the results of the query
         $posts = $paginator->paginate(
-            // Doctrine Query, not results
+        // Doctrine Query, not results
             $allPostsQuery,
             // Define the page parameter
             $request->query->getInt('page', 1),
@@ -73,7 +73,7 @@ class PostController extends FOSRestController
         // For instance, return a Response with encoded Json
         return new Response($jsonObject, 200, ['Content-Type' => 'application/json']);
     }
-        /**
+    /**
      * Creates a comment resource
      * @Rest\Post("/postComment")
      * @param Request $request
