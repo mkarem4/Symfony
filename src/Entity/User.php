@@ -49,6 +49,11 @@ class User implements UserInterface
      */
     private $posts;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true,unique=true)
+     */
+    private $api_token;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -225,5 +230,17 @@ class User implements UserInterface
     public function __toString(){
         // to show the name of the Post in the select
         return $this->username;
+    }
+
+    public function getApiToken(): ?string
+    {
+        return $this->api_token;
+    }
+
+    public function setApiToken(?string $api_token): self
+    {
+        $this->api_token = $api_token;
+
+        return $this;
     }
 }
