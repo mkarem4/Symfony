@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\FileUploader;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/admin/post")
@@ -18,12 +19,36 @@ use App\Service\FileUploader;
 class PostController extends AbstractController
 {
     /**
+     * return list of posts
      * @Route("/", name="post_index", methods={"GET"})
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @return Response
      */
-    public function index(PostRepository $postRepository): Response
+    public function index(Request $request, PaginatorInterface $paginator): Response
     {
+        // Retrieve the entity manager of Doctrine
+        $em = $this->getDoctrine()->getManager();
+
+        // Get some repository of data, in our case we have an Appointments entity
+        $postsRepository = $em->getRepository(Post::class);
+
+        // Find all the data on the Appointments table, filter your query as you need
+        $allPostsQuery = $postsRepository->createQueryBuilder('p')
+            ->getQuery();
+
+        // Paginate the results of the query
+        $posts = $paginator->paginate(
+        // Doctrine Query, not results
+            $allPostsQuery,
+            // Define the page parameter
+            $request->query->getInt('page', 1),
+            // Items per page
+            1
+        );
+
         return $this->render('post/index.html.twig', [
-            'posts' => $postRepository->findAll(),
+            'posts' => $posts,
         ]);
     }
 

@@ -1,5 +1,7 @@
 <?php
 namespace App\Controller\API;
+use App\Entity\Comment;
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -7,9 +9,8 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use App\Entity\Post;
 use App\Form\PostType;
-use App\Repository\PostRepository;
-use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerBuilder;
+use Knp\Component\Pager\PaginatorInterface;
 
 
 
@@ -31,7 +32,6 @@ class PostController extends FOSRestController
         $repository = $this->getDoctrine()->getRepository(Post::class);
         $post = $repository->findById($postId);
 
-
         $serializer = SerializerBuilder::create()->build();
         $jsonObject = $serializer->serialize($post, 'json');
 
@@ -42,12 +42,31 @@ class PostController extends FOSRestController
     /**
      * Retrieves an post resource
      * @Rest\Get("/posts")
+     * @param Request $request
+     * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function getPosts(): Response
+    public function getPosts(Request $request, PaginatorInterface $paginator): Response
     {
-        $repository = $this->getDoctrine()->getRepository(Post::class);
-        $posts = $repository->findAll();
+        // Retrieve the entity manager of Doctrine
+        $em = $this->getDoctrine()->getManager();
+
+        // Get some repository of data, in our case we have an Appointments entity
+        $postsRepository = $em->getRepository(Post::class);
+
+        // Find all the data on the Appointments table, filter your query as you need
+        $allPostsQuery = $postsRepository->createQueryBuilder('p')
+            ->getQuery();
+
+        // Paginate the results of the query
+        $posts = $paginator->paginate(
+            // Doctrine Query, not results
+            $allPostsQuery,
+            // Define the page parameter
+            $request->query->getInt('page', 1),
+            // Items per page
+            1
+        );
         $serializer = SerializerBuilder::create()->build();
         $jsonObject = $serializer->serialize($posts,'json');
 
@@ -55,51 +74,27 @@ class PostController extends FOSRestController
         return new Response($jsonObject, 200, ['Content-Type' => 'application/json']);
     }
         /**
-     * Creates an Article resource
-     * @Rest\Post("/posts")
+     * Creates a comment resource
+     * @Rest\Post("/postComment")
      * @param Request $request
-     * @return View
-     */
-    public function postArticle(Request $request): View
-    {
-        $post = new Post();
-        $post->setTitle($request->get('title'));
-        $post->setContent($request->get('content'));
-        $this->postRepository->save($post);
-        // In case our POST was a success we need to return a 201 HTTP CREATED response
-        return View::create($post, Response::HTTP_CREATED);
-    }
-
-        /**
-     * Lists all posts.
-     * @Rest\Get("/posts")
-     *
      * @return Response
      */
-    public function getPostAction()
+    public function postComment(Request $request): Response
     {
-        $repository = $this->getDoctrine()->getRepository(Post::class);
-        $posts = $repository->findall();
-        return $this->handleView($this->view($posts));
+        $post = $this->getDoctrine()->getRepository(Post::class)->find($request->get('post_id'));
+        $user = $this->getDoctrine()->getRepository(User::class)->find($request->get('user_id'));
+
+        $comment = new Comment();
+        $comment->setContent($request->get('content'));
+        $comment->setPost($post);
+        $comment->setUser($user);
+        // Retrieve the entity manager of Doctrine
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($comment);
+        $em->flush();
+        return $this->json(['message' => 'Comment saved successfully']);
+        // In case our POST was a success we need to return a 201 HTTP CREATED response
+//        return new Response( 'Comment saved successfully' , 200, ['Content-Type' => 'application/json']);
     }
-//    /**
-//     * Create Movie.
-//     * @Rest\Post("/movie")
-//     *
-//     * @return Response
-//     */
-//    public function postMovieAction(Request $request)
-//    {
-//        $movie = new Movie();
-//        $form = $this->createForm(MovieType::class, $movie);
-//        $data = json_decode($request->getContent(), true);
-//        $form->submit($data);
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($movie);
-//            $em->flush();
-//            return $this->handleView($this->view(['status' => 'ok'], Response::HTTP_CREATED));
-//        }
-//        return $this->handleView($this->view($form->getErrors()));
-//    }
+
 }

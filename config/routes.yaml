@@ -12,3 +12,7 @@ post:
 posts:
     path: /api/posts
     controller: App\Controller\API\PostController::getPosts
+
+postComment:
+    path: /api/postComment
+    controller: App\Controller\API\PostController::postComment

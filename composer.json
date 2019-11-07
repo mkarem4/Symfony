@@ -9,6 +9,7 @@
         "gedmo/doctrine-extensions": "^2.4",
         "impulze/intervention-image-bundle": "^1.2",
         "jms/serializer-bundle": "^3.4",
+        "knplabs/knp-paginator-bundle": "^4.0",
         "sensio/framework-extra-bundle": "^5.5",
         "symfony/asset": "4.3.*",
         "symfony/console": "4.3.*",
