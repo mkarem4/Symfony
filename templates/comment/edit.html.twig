@@ -3,11 +3,15 @@
 {% block title %}Edit Comment{% endblock %}
 
 {% block body %}
+    <div class="col-md-10">
+
     <h1>Edit Comment</h1>
 
     {{ include('comment/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('comment_index') }}">back to list</a>
+    <a href="{{ path('comment_index') }}" class="btn btn-primary">back to list</a>
 
     {{ include('comment/_delete_form.html.twig') }}
+
+    </div>
 {% endblock %}

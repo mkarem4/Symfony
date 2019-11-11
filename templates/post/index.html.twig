@@ -7,13 +7,13 @@
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Content</th>
-                <th>actions</th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Content</th>
+            <th>actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for post in posts %}
@@ -23,8 +23,8 @@
                 <td>{{ post.user.username }}</td>
                 <td>{{ post.content }}</td>
                 <td>
-                    <a href="{{ path('post_show', {'id': post.id}) }}">show</a>
-                    <a href="{{ path('post_edit', {'id': post.id}) }}">edit</a>
+                    <a href="{{ path('post_show', {'id': post.id}) }}" class="btn btn-primary">show</a>
+                    <a href="{{ path('post_edit', {'id': post.id}) }}" class="btn btn-primary">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -37,5 +37,5 @@
     <div class="navigation">
         {{ knp_pagination_render(posts) }}
     </div>
-    <a href="{{ path('post_new') }}">Create new</a>
+    <a href="{{ path('post_new') }}" class="btn btn-primary">Create new</a>
 {% endblock %}
