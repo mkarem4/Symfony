@@ -26,7 +26,7 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="comment_new", methods={"GET","POST"})
+     * @Route("/new", name="comment_create", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {

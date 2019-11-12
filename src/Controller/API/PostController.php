@@ -2,23 +2,20 @@
 namespace App\Controller\API;
 use App\Entity\Comment;
 use App\Entity\User;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Post;
-use App\Form\PostType;
 use JMS\Serializer\SerializerBuilder;
 use Knp\Component\Pager\PaginatorInterface;
-
-
 
 /**
  * Post controller.
  * @Route("/api", name="api_")
  */
-class PostController extends FOSRestController
+class PostController extends AbstractFOSRestController
 {
 
     /**

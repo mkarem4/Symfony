@@ -30,39 +30,102 @@
 
     {% block content %}
 
-        <div class="card">
-            <div>{{ post.title }}</div>
-            <div>{{ post.content }}</div>
-            <div>{% if(post.featuredImage) %} <img
-                    src="{{ asset('/uploads/featured_images/thumbs/' ~ post.featuredImage) }}">{% endif %}</div>
-            <div>{% if(post.file) %} <a href="{{ asset('/uploads/' ~ post.file) }}">{{ post.file }}</a>{% endif %}
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-10">
+                            <div class="card">
+                                {% if(post.featuredImage) %}<img class="card-img-top"
+                                                                 src="{{ asset('/uploads/featured_images/' ~ post.featuredImage) }}"
+                                                                 alt="Card image cap">{% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ post.title }}</h5>
+                                    <p class="card-text">{{ post.content }}</p>
+                                    {% if(post.file) %}<a href="{{ asset('/uploads/' ~ post.file) }}"
+                                                          class="btn btn-primary">{{ post.file }}</a>{% endif %}
+                                </div>
+                            </div>
+                    </div>
             </div>
-
         </div>
 
-        <div class="row">
-            <div class="example-wrapper">{{ post.comments|length }} Comments</div>
-        </div>
+        <hr>
 
         {% if is_granted('ROLE_USER') %}
-            Leave Your Comment :
-            <form action="{{ path('save_comment',{'id': post.id}) }}" method="post">
-                <textarea name="content"></textarea>
-                <button type="submit">Save</button>
-            </form>
+            <div class="container pb-cmnt-container">
+                <div class="row bootstrap snippets">
+                    <div class="col-md-10 col-md-offset-2 col-sm-12">
+                        <div class="comment-wrapper">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    Comment panel
+                                </div>
+                                <div class="panel-body">
+                                    <form action="{{ path('save_comment',{'id': post.id}) }}" method="post">
+                                        <textarea class="form-control" placeholder="write a comment..." rows="3"
+                                                  name="content"></textarea>
+                                        <br>
+                                        <button type="submit" class="btn btn-info pull-right">Post</button>
+                                    </form>
+                                    <div class="clearfix"></div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="example-wrapper">{{ post.comments|length }} Comments</div>
+                                    </div>
+                                    <ul class="media-list">
+                                        {% for comment in post.comments %}
+                                            <li class="media comment{{ comment.id }}">
+                                                <div class="media-body">
+                                                    {#                                <span class="text-muted pull-right">#}
+                                                    {#                                    <small class="text-muted">30 min ago</small>#}
+                                                    {#                                </span>#}
+                                                    <strong class="text-success">{{ comment.user.username }}</strong>
+                                                    <p>
+                                                        {{ comment.content }}
+                                                    </p>
+                                                </div>
+                                                {% if (app.user and (app.user.username == comment.user.username)) or (is_granted('ROLE_ADMIN')) %}
+                                                    <a href="{{ path('comment_delete_ajax',{'id': comment.id}) }}"
+                                                       id="{{ comment.id }}"
+                                                       class="deleteBtn btn btn-danger btn-xs">Remove</a>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
         {% endif %}
 
-        <h2>Comments:</h2>
-        {% for comment in post.comments %}
-            <span class="comment{{ comment.id }}"><b>{{ comment.user.username }}</b> : {{ comment.content }}
-                {% if (app.user and (app.user.username == comment.user.username)) or (is_granted('ROLE_ADMIN')) %}
-                    <a href="{{ path('comment_delete_ajax',{'id': comment.id}) }}" id="{{ comment.id }}"
-                       class="deleteBtn btn btn-danger btn-xs">Remove</a>
-                {% endif %}
-            </span>
+        <style>
+            .pb-cmnt-container {
+                font-family: Lato;
+            }
 
-            <br>
-        {% endfor %}
+            body {
+                margin-top: 20px;
+            }
+
+            .comment-wrapper .panel-body {
+                max-height: 650px;
+            }
+
+            .comment-wrapper .media-list .media img {
+                width: 64px;
+                height: 64px;
+                border: 2px solid #e5e7e8;
+            }
+
+            .comment-wrapper .media-list .media {
+                border-bottom: 1px dashed #efefef;
+                margin-bottom: 25px;
+            }
+        </style>
+
     {% endblock %}
 {% endblock %}
 
